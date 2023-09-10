@@ -23,11 +23,11 @@ exports.jwtValidate = (req, res, next) => {
 };
 
 exports.addUser = async (req, res) => {
-  const authenticatedUserId = req.cookies;
-  console.log(authenticatedUserId);
-  if (authenticatedUserId.role !== "developer") {
-    return res.status(403).json({ error: "Access denied" });
-  }
+  // const authenticatedUserId = req.cookies;
+  // console.log(authenticatedUserId);
+  // if (authenticatedUserId.role !== "developer") {
+  //   return res.status(403).json({ error: "Access denied" });
+  // }
   const userData = {
     username: req.body.username,
     role: req.body.role,
@@ -130,7 +130,7 @@ exports.login = (req, res) => {
     const userRole = userData[0].role;
     try {
       const passwordMatch = await bcrypt.compare(password, storedPassword);
-
+      console.log(password, storedPassword);
       if (!passwordMatch) {
         res.status(401).json({ error: "Invalid password" });
         return;

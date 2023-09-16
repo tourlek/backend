@@ -7,8 +7,6 @@ require("dotenv").config();
 
 exports.jwtValidate = (req, res, next) => {
   try {
-    console.log(req.headers);
-
     if (!req.headers["authorization"]) return res.sendStatus(401);
 
     const token = req.headers["authorization"].replace("Bearer ", "");
@@ -54,12 +52,10 @@ exports.addUser = async (req, res) => {
 
 exports.findById = (req, res) => {
   const userId = req.params.id;
+  const token = req.headers["authorization"].replace("Bearer ", "");
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  const userRole = decoded.role;
-  if (
-    userId !== authenticatedUserId.userId &&
-    authenticatedUserId.userRole !== "developer"
-  ) {
+  const tokenId = decoded.id;
+  if (parseInt(userId) !== parseInt(tokenId)) {
     return res.status(403).json({ error: "Access denied" });
   }
   users.getUserByID(userId, (err, data) => {

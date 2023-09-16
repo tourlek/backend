@@ -8,8 +8,8 @@ RUN npm install
 
 COPY .env .env
 
-COPY ./src  ./src
+COPY ./src ./src
 
 EXPOSE 8080
 
-CMD [ "npm", "start" ]
+CMD [ "npx", "nodemon", "src/index.js" ]

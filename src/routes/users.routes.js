@@ -1,7 +1,9 @@
 const users = require("../controllers/users.controller");
 const router = require("express").Router();
+const employees = require("../controllers/employee.controller");
 
 // Define the route for fetching users
+router.get("/users", users.jwtValidate, users.findAll);
 router.get("/users", users.jwtValidate, users.findAll);
 router.get("/users/:id", users.jwtValidate, users.findById);
 router.post("/users", users.addUser);

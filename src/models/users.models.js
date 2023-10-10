@@ -26,11 +26,9 @@ module.exports.getUserByID = (userId, callback) => {
   let query = "SELECT * FROM users WHERE id = ?";
   db.query(query, [userId], (err, res) => {
     if (err) {
-      console.log("error: ", err);
       callback(err, null);
       return;
     }
-    console.log("user data: ", res);
     callback(null, res);
   });
 };
@@ -42,7 +40,6 @@ module.exports.getUserByUsername = (username, callback) => {
       callback(err, null);
       return;
     }
-    console.log("user data: ", res);
     callback(null, res);
   });
 };

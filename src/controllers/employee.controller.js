@@ -6,7 +6,7 @@ exports.addEmployee = async (req, res) => {
     name: req.body.name,
     lastName: req.body.lastName,
     cardNumberId: req.body.cardNumberId,
-    phone: parseInt(req.body.phone),
+    phone: req.body.phone,
     email: req.body.email,
     user_id: req.body.user_id,
     employeeType: req.body.employeeType,
@@ -30,7 +30,7 @@ exports.updateEmployee = async (req, res) => {
     name: req.body.name,
     lastName: req.body.lastName,
     cardNumberId: req.body.cardNumberId,
-    phone: parseInt(req.body.phone),
+    phone: req.body.phone,
     email: req.body.email,
     employeeType: req.body.employeeType,
   };
@@ -54,7 +54,6 @@ exports.updateEmployee = async (req, res) => {
 exports.deleteEmployee = (req, res) => {
   const employeeId = req.params.id;
 
-  // Call your model's function to delete the employee by ID
   employees.deleteEmployeeById(employeeId, (err, data) => {
     if (err) {
       res.status(500).json({
@@ -74,8 +73,6 @@ exports.findById = (req, res) => {
   const token = req.headers["authorization"].replace("Bearer ", "");
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
   const tokenId = decoded.id;
-  console.log(parseInt(userId));
-  console.log(parseInt(tokenId));
   if (parseInt(userId) !== parseInt(tokenId)) {
     return res.status(403).json({ error: "Access denied" });
   }

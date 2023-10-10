@@ -7,7 +7,7 @@ services:
       MYSQL_ROOT_PASSWORD: lek0212
       MYSQL_DATABASE: workpermit
     ports:
-      - '3306:3306'
+      - '3307:3307'
     networks:
       - mynetwork
     volumes:

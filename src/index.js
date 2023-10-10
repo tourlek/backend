@@ -28,8 +28,10 @@ app.use(
 
 const userRoute = require("./routes/users.routes");
 const employeeRoute = require("./routes/employees.routes");
+const employerRoute = require("./routes/employers.routes");
+const addressRoute = require("./routes/address.routes");
 
-app.use("/api", userRoute, employeeRoute);
+app.use("/api", userRoute, employeeRoute, employerRoute, addressRoute);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

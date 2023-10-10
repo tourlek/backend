@@ -47,7 +47,6 @@ module.exports.deleteEmployeeById = (employeeId, result) => {
     }
 
     if (res.affectedRows === 0) {
-      // Employee not found with the given ID
       result({ message: "Employee not found" }, null);
       return;
     }

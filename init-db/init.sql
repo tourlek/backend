@@ -7,6 +7,13 @@ CREATE TABLE users (
   firstName VARCHAR(255),
   lastName VARCHAR(255),
   accessToken TEXT,
+  provide VARCHAR(255),
+  postalCode INT,
+  subDistrict VARCHAR(255),
+  district VARCHAR(255),
+  road VARCHAR(255),
+  addressNo VARCHAR(255),
+  streetAddress VARCHAR(255),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -26,8 +33,9 @@ CREATE TABLE employee (
 
 -- Create the 'employers' table
 CREATE TABLE employers (
-  id VARCHAR(255) PRIMARY KEY,
+  id INT AUTO_INCREMENT PRIMARY KEY,
   employee_id INT,
+  user_id INT,
   firstName VARCHAR(255),
   lastName VARCHAR(255),
   dateOfBirth VARCHAR(255),
@@ -48,6 +56,7 @@ CREATE TABLE employers (
   issuedAtOld VARCHAR(255),
   startOld VARCHAR(255),
   endOld VARCHAR(255),
+  workTypeOld VARCHAR(255),
   visaTypeOld VARCHAR(255),
   port VARCHAR(255),
   portDate VARCHAR(255),

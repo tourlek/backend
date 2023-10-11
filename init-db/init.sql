@@ -27,6 +27,7 @@ CREATE TABLE employee (
   email VARCHAR(255),
   employeeType VARCHAR(255),
   user_id INT,
+  address_id INT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id)
 );

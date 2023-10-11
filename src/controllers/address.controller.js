@@ -58,7 +58,6 @@ exports.updateAddress = async (req, res) => {
 
 exports.deleteAddress = (req, res) => {
   const employeeId = req.params.id;
-
   addresses.deleteAddressById(employeeId, (err, data) => {
     if (err) {
       res.status(500).json({
@@ -72,6 +71,35 @@ exports.deleteAddress = (req, res) => {
         message: "Address deleted successfully",
         data: data,
       });
+    }
+  });
+};
+
+module.exports.getAddressByEmployeeID = (req, res) => {
+  const employee_id = req.params.id; // Assuming the employee_id is in the URL parameters
+  addresses.getAddressByEmployeeID(employee_id, (err, data) => {
+    if (err) {
+      res.status(404).send({
+        message:
+          err.message || "Some error occurred while retrieving the user.",
+      });
+    } else {
+      console.log(data);
+      res.send(data);
+    }
+  });
+};
+
+module.exports.getAddressByID = (req, res) => {
+  const id = req.params.id; // Assuming the id is in the URL parameters
+  addresses.getAddressByID(id, (err, data) => {
+    if (err) {
+      res.status(404).send({
+        message:
+          err.message || "Some error occurred while retrieving the user.",
+      });
+    } else {
+      res.send(data);
     }
   });
 };

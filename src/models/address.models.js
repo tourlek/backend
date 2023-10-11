@@ -88,3 +88,27 @@ module.exports.deleteAddressById = (employeeId, result) => {
     result(null, res);
   });
 };
+module.exports.getAddressByEmployeeID = (employee_id, callback) => {
+  let query = "SELECT * FROM address WHERE employee_id = ?";
+  db.query(query, [employee_id], (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      callback(err, null);
+      return;
+    }
+    console.log("user data: ", res);
+    callback(null, res);
+  });
+};
+module.exports.getAddressByID = (id, callback) => {
+  let query = "SELECT * FROM address WHERE id = ?";
+  db.query(query, [id], (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      callback(err, null);
+      return;
+    }
+    console.log("user data: ", res);
+    callback(null, res);
+  });
+};

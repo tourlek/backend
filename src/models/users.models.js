@@ -1,17 +1,50 @@
 const db = require("../config/db");
 
 module.exports.addUser = (userData, result) => {
-  const { username, role, password } = userData;
-  const query = "INSERT INTO users (username, role, password) VALUES (?, ?, ?)";
+  const {
+    username,
+    role,
+    password,
+    streetAddress,
+    addressNo,
+    road,
+    district,
+    subDistrict,
+    postalCode,
+    provide,
+    lastName,
+    firstName,
+  } = userData;
 
-  db.query(query, [username, role, password], (err, res) => {
-    if (err) {
-      result(err, null);
-      return;
+  const query =
+    "INSERT INTO users (username, role, password, streetAddress, addressNo, road, district, subDistrict, postalCode, provide, lastName, firstName) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+  db.query(
+    query,
+    [
+      username,
+      role,
+      password,
+      streetAddress,
+      addressNo,
+      road,
+      district,
+      subDistrict,
+      postalCode,
+      provide,
+      lastName,
+      firstName,
+    ],
+    (err, res) => {
+      if (err) {
+        result(err, null);
+        return;
+      }
+      result(null, res);
     }
-    result(null, res);
-  });
+  );
 };
+
 module.exports.getAll = (result) => {
   let query = "SELECT * FROM users";
   db.query(query, (err, res) => {
@@ -70,11 +103,11 @@ module.exports.updateUserToken = (userId, newToken, callback) => {
 module.exports.logout = (req, callback) => {
   req.session.destroy((err) => {
     if (err) {
-      console.error('Error during logout:', err);
+      console.error("Error during logout:", err);
       callback(err, null);
     } else {
-      console.log('Logout successful');
-      callback(null, 'Logout successful');
+      console.log("Logout successful");
+      callback(null, "Logout successful");
     }
   });
 };

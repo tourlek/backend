@@ -5,6 +5,7 @@ const router = require("express").Router();
 //router.get("/address/:id", users.jwtValidate, address.findById);
 router.post("/address", users.jwtValidate, address.addAddress);
 router.delete("/address/:id", users.jwtValidate, address.deleteAddress);
+router.get("/address/:id", users.jwtValidate, address.getAddressByEmployeeID);
 router.patch("/address/:id", users.jwtValidate, address.updateAddress);
 
 module.exports = router;

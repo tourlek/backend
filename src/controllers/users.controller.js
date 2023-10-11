@@ -30,21 +30,38 @@ exports.jwtValidate = (req, res, next) => {
 };
 
 exports.addUser = async (req, res) => {
-  // const authenticatedUserId = req.cookies;
-  // console.log(authenticatedUserId);
-  // if (authenticatedUserId.role !== "developer") {
-  //   return res.status(403).json({ error: "Access denied" });
-  // }
-  const userData = {
-    username: req.body.username,
-    role: req.body.role,
-    password: req.body.password,
-  };
+  const {
+    username,
+    role,
+    password,
+    streetAddress,
+    addressNo,
+    road,
+    district,
+    subDistrict,
+    postalCode,
+    provide,
+    lastName,
+    firstName,
+  } = req.body; // Destructure the request body to get user data
 
   try {
-    const hashedPassword = await hashPassword(userData.password);
+    const hashedPassword = await hashPassword(password); // Assuming you have a function to hash passwords
 
-    userData.password = hashedPassword;
+    const userData = {
+      username,
+      role,
+      password: hashedPassword,
+      streetAddress,
+      addressNo,
+      road,
+      district,
+      subDistrict,
+      postalCode,
+      provide,
+      lastName,
+      firstName,
+    };
 
     users.addUser(userData, (err, data) => {
       if (err) {
@@ -55,6 +72,7 @@ exports.addUser = async (req, res) => {
       }
     });
   } catch (error) {
+    console.error("Error hashing password:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };

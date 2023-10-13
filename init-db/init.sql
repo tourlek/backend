@@ -20,7 +20,8 @@ CREATE TABLE users (
 -- Create the 'employee' table
 CREATE TABLE employee (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(255),
+  firstName VARCHAR(255),
+  companyName VARCHAR(255),
   lastName VARCHAR(255),
   cardNumberId VARCHAR(13),
   phone VARCHAR(10),
@@ -79,5 +80,6 @@ CREATE TABLE address (
   addressNo VARCHAR(255),
   streetAddress VARCHAR(255),
   employee_id INT,
+  user_id: INT,
   FOREIGN KEY (employee_id) REFERENCES employee(id)
 );

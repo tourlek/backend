@@ -1,14 +1,33 @@
 const db = require("../config/db");
 
 module.exports.addEmployee = (dataEmployee, result) => {
-  const { name, lastName, cardNumberId, phone, email, user_id, employeeType } =
-    dataEmployee;
+  const {
+    firstName,
+    companyName,
+    lastName,
+    cardNumberId,
+    phone,
+    email,
+    user_id,
+    address_id,
+    employeeType,
+  } = dataEmployee;
   const query =
-    "INSERT INTO employee (name, lastName, cardNumberId, phone, email, user_id, employeeType) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    "INSERT INTO employee (firstName, companyName, lastName, cardNumberId, phone, email, user_id,address_id, employeeType) VALUES (?, ?, ?, ?, ?, ?,?, ?, ?)";
 
   db.query(
     query,
-    [name, lastName, cardNumberId, phone, email, user_id, employeeType],
+    [
+      firstName,
+      companyName,
+      lastName,
+      cardNumberId,
+      phone,
+      email,
+      user_id,
+      address_id,
+      employeeType,
+    ],
     (err, res) => {
       if (err) {
         result(err, null);
@@ -19,14 +38,32 @@ module.exports.addEmployee = (dataEmployee, result) => {
   );
 };
 module.exports.updateEmployee = (employeeId, updatedEmployeeData, result) => {
-  const { name, lastName, cardNumberId, phone, email, employeeType } =
-    updatedEmployeeData;
+  const {
+    firstName,
+    companyName,
+    lastName,
+    cardNumberId,
+    phone,
+    email,
+    address_id,
+    employeeType,
+  } = updatedEmployeeData;
   const query =
-    "UPDATE employee SET name=?, lastName=?, cardNumberId=?, phone=?, email=?, employeeType=? WHERE id=?";
+    "UPDATE employee SET firstName=?, companyName=?, lastName=?, cardNumberId=?, phone=?, email=?,address_id=?, employeeType=? WHERE id=?";
 
   db.query(
     query,
-    [name, lastName, cardNumberId, phone, email, employeeType, employeeId],
+    [
+      firstName,
+      companyName,
+      lastName,
+      cardNumberId,
+      phone,
+      email,
+      address_id,
+      employeeType,
+      employeeId,
+    ],
     (err, res) => {
       if (err) {
         result(err, null);

@@ -10,6 +10,7 @@ exports.addAddress = async (req, res) => {
     addressNo: req.body.addressNo,
     streetAddress: req.body.streetAddress,
     employee_id: req.body.employee_id,
+    user_id: req.body.user_id,
   };
   try {
     addresses.addAddress(dataAddress, (err, data) => {
@@ -17,7 +18,11 @@ exports.addAddress = async (req, res) => {
         console.error(err);
         res.status(500).json({ error: "Internal Server Error" });
       } else {
-        res.status(200).json({ message: "Address added successfully" });
+        const insertedId = data.insertId; // Assuming your data source returns the inserted ID
+
+        res
+          .status(200)
+          .json({ id: insertedId, message: "Address added successfully" });
       }
     });
   } catch (error) {
@@ -37,6 +42,7 @@ exports.updateAddress = async (req, res) => {
     addressNo: req.body.addressNo,
     streetAddress: req.body.streetAddress,
     employee_id: req.body.employee_id,
+    user_id: req.body.user_id,
   };
 
   try {
@@ -44,8 +50,6 @@ exports.updateAddress = async (req, res) => {
       if (err) {
         console.error(err);
         res.status(500).json({ error: "Internal Server Error" });
-      } else if (data.affectedRows === 0) {
-        res.status(404).json({ error: "Address not found" });
       } else {
         res.status(200).json({ message: "Address updated successfully" });
       }

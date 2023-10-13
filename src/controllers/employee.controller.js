@@ -3,35 +3,44 @@ const jwt = require("jsonwebtoken");
 
 exports.addEmployee = async (req, res) => {
   const dataEmployee = {
-    name: req.body.name,
+    firstName: req.body.firstName,
+    companyName: req.body.companyName,
     lastName: req.body.lastName,
     cardNumberId: req.body.cardNumberId,
     phone: req.body.phone,
     email: req.body.email,
     user_id: req.body.user_id,
+    address_id: req.body.address_id,
     employeeType: req.body.employeeType,
   };
+
   try {
-    employees.addEmployee(dataEmployee, (err, data) => {
+    employees.addEmployee(dataEmployee, (err, insertedEmployee) => {
       if (err) {
         console.log(err);
         res.status(500).json({ error: "Internal Server Error" });
       } else {
-        res.status(200).json({ message: "Employee added successfully" });
+        const insertedId = insertedEmployee.insertId; // Assuming your data source returns the inserted ID
+        res
+          .status(200)
+          .json({ id: insertedId, message: "Employee added successfully" });
       }
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
 exports.updateEmployee = async (req, res) => {
   const employeeId = req.params.id;
   const updatedEmployeeData = {
-    name: req.body.name,
+    firstName: req.body.firstName,
+    companyName: req.body.companyName,
     lastName: req.body.lastName,
     cardNumberId: req.body.cardNumberId,
     phone: req.body.phone,
     email: req.body.email,
+    address_id: req.body.address_id,
     employeeType: req.body.employeeType,
   };
 

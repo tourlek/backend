@@ -4,10 +4,12 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm ci
+RUN npm install
 
-COPY . .
+COPY .env .env
+
+COPY ./src ./src
 
 EXPOSE 8080
 
-CMD [ "npm", "start" ]
+CMD [ "npx", "nodemon", "src/index.js" ]

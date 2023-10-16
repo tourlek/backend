@@ -7,14 +7,21 @@ require("dotenv").config();
 
 exports.jwtValidate = (req, res, next) => {
   try {
-    console.log(req.headers);
-
-    if (!req.headers["authorization"]) return res.sendStatus(401);
+    if (!req.headers["authorization"]) {
+      return res.sendStatus(401); // No token provided
+    }
 
     const token = req.headers["authorization"].replace("Bearer ", "");
 
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-      if (err) throw new Error(err.message);
+      if (err) {
+        return res.sendStatus(401);
+      }
+
+      const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+      if (decoded.exp && decoded.exp < currentTimeInSeconds) {
+        return res.sendStatus(401); // Token has expired
+      }
       next();
     });
   } catch (error) {
@@ -23,21 +30,38 @@ exports.jwtValidate = (req, res, next) => {
 };
 
 exports.addUser = async (req, res) => {
-  const authenticatedUserId = req.cookies;
-  console.log(authenticatedUserId);
-  if (authenticatedUserId.role !== "developer") {
-    return res.status(403).json({ error: "Access denied" });
-  }
-  const userData = {
-    username: req.body.username,
-    role: req.body.role,
-    password: req.body.password,
-  };
+  const {
+    username,
+    role,
+    password,
+    streetAddress,
+    addressNo,
+    road,
+    district,
+    subDistrict,
+    postalCode,
+    provide,
+    lastName,
+    firstName,
+  } = req.body; // Destructure the request body to get user data
 
   try {
-    const hashedPassword = await hashPassword(userData.password);
+    const hashedPassword = await hashPassword(password); // Assuming you have a function to hash passwords
 
-    userData.password = hashedPassword;
+    const userData = {
+      username,
+      role,
+      password: hashedPassword,
+      streetAddress,
+      addressNo,
+      road,
+      district,
+      subDistrict,
+      postalCode,
+      provide,
+      lastName,
+      firstName,
+    };
 
     users.addUser(userData, (err, data) => {
       if (err) {
@@ -48,18 +72,17 @@ exports.addUser = async (req, res) => {
       }
     });
   } catch (error) {
+    console.error("Error hashing password:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
 exports.findById = (req, res) => {
   const userId = req.params.id;
+  const token = req.headers["authorization"].replace("Bearer ", "");
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  const userRole = decoded.role;
-  if (
-    userId !== authenticatedUserId.userId &&
-    authenticatedUserId.userRole !== "developer"
-  ) {
+  const tokenId = decoded.id;
+  if (parseInt(userId) !== parseInt(tokenId)) {
     return res.status(403).json({ error: "Access denied" });
   }
   users.getUserByID(userId, (err, data) => {
@@ -110,6 +133,45 @@ exports.logout = (req, res) => {
     }
   });
 };
+exports.check = (req, res) => {
+  try {
+    if (!req.headers["authorization"]) {
+      return res.status(401).json({ message: "Access token is missing." });
+    }
+
+    const token = req.headers["authorization"].replace("Bearer ", "");
+
+    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+      if (err) {
+        return res.status(401).json({ message: "Access token is invalid." });
+      }
+
+      // Check token expiration
+      const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+      if (decoded.exp && decoded.exp < currentTimeInSeconds) {
+        // Token has expired; delete it from the database
+        const userId = decoded.id;
+
+        // Update the token to null in the database
+        users.updateUserToken(userId, null, (updateErr, updateResult) => {
+          if (updateErr) {
+            return res
+              .status(500)
+              .json({ message: "Error deleting user token." });
+          }
+          return res
+            .status(401)
+            .json({ message: "Access token has expired and was deleted." });
+        });
+      } else {
+        return res.status(200).json({ message: "Access token is valid." });
+      }
+    });
+  } catch (error) {
+    return res.status(403).json({ message: "Forbidden." });
+  }
+};
+
 exports.login = (req, res) => {
   const { username, password } = req.body;
 
@@ -130,7 +192,7 @@ exports.login = (req, res) => {
     const userRole = userData[0].role;
     try {
       const passwordMatch = await bcrypt.compare(password, storedPassword);
-
+      console.log(password, storedPassword);
       if (!passwordMatch) {
         res.status(401).json({ error: "Invalid password" });
         return;
